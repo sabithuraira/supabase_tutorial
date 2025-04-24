@@ -1,8 +1,10 @@
 <script setup>
-  import { createClient } from '@supabase/supabase-js'
-  const supabase = createClient('your_url', 
-    'your anon key')
+  // import { createClient } from '@supabase/supabase-js'
+  // const supabase = createClient('your_url', 
+  //   'your anon key')
   
+  const supabase = useSupabaseClient()
+
   const datas = ref([])
   const form = ref({ id: "", name: "", desc: ""}) 
 
