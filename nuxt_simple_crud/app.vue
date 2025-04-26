@@ -7,12 +7,24 @@
 
   const datas = ref([])
   const form = ref({ id: "", name: "", desc: "", category_id: ""}) 
+  const search_keyword = ref("")
   const categories =  ref([])
 
   //get data
-  async function getDatas() {
-    const { data } = await supabase.from('animals')
+  async function getDatas(keyword = "") {
+    // const { data } = await supabase.from('animals')
+    //     .select(`*, categories(id, name)`)
+    let query = supabase.from('animals')
         .select(`*, categories(id, name)`)
+
+    if(keyword!=""){
+      // query = query.ilike('name', '%' + keyword +'%')
+      query = query.or(
+              'name.ilike.%' + keyword +'%,description.ilike.%' + keyword +'%',
+            )
+    }
+
+    const { data } = await query
     datas.value = data
     getCategories()
   }
@@ -62,6 +74,8 @@
 
 <template>
   <div>
+    <input type="text" v-model="search_keyword"/> 
+    <button @click="getDatas(search_keyword)">Search</button>
     <ul>
       <li v-for="data in datas" :key="data.id">
         <a href="#" @click="formUpdate(data.id, data.name, data.description, data.category_id)">Edit</a> | 
