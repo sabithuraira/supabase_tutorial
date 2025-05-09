@@ -4,6 +4,7 @@
   //   'your anon key')
   
   const supabase = useSupabaseClient()
+  const user = useSupabaseUser()
 
   const datas = ref([])
   const form = ref({ id: "", name: "", desc: "", category_id: ""}) 
@@ -66,6 +67,13 @@
     getDatas()
   }
 
+  const signOut = async () => {
+    const { error } = await supabase.auth.signOut()
+
+    if (error) console.log(error)
+    else alert("Success Sign Out")
+  }
+
   onMounted(() => {
     form.value = { id: "", name: "", desc: ""}
     getDatas()
@@ -74,8 +82,15 @@
 
 <template>
   <div>
-    <a href="/login">Login</a><br/>
-    <a href="/signup">Signup</a><br/>
+    <div v-if="!user">
+      <a href="/login">Login</a><br/>
+      <a href="/signup">Signup</a><br/>
+    </div>
+    <div v-else>
+      <a href="#" @click="signOut()">Sign Out</a><br/>
+      <a href="/aboutme">About Me</a><br/>
+    </div>
+    
     <input type="text" v-model="search_keyword"/> 
     <button @click="getDatas(search_keyword)">Search</button>
     <ul>

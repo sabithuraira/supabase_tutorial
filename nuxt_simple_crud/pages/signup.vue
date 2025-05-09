@@ -1,14 +1,12 @@
-
 <script setup>
   const supabase = useSupabaseClient()
 
   const form = ref({ email: "", password: ""})
 
-  const signIn = async () => {
-
+  const signUp = async () => {
     const { data, error } = await supabase.auth.signUp({
-      email: form.email,
-      password: form.password,
+      email: form.value.email,
+      password: form.value.password,
     })
 
     if (error) console.log(error)
@@ -22,6 +20,6 @@
     Email : <input type="text" v-model="form.email" /> <br/>
     Password : <input type="text" v-model="form.password" /> <br/>
     
-    <button @click="signIn()">Sign In</button>
+    <button @click="signUp()">Sign Up</button>
   </div>
 </template>
